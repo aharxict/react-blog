@@ -31,6 +31,9 @@ class Blog extends Component {
 
           this.setState({posts: updatedPosts});
           console.log(response.data);
+        })
+        .catch(error => {
+          console.log(error);
         });
     }
     render () {
