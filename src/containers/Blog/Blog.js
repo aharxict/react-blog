@@ -1,59 +1,41 @@
 import React, { Component } from 'react';
-import axios from 'axios'
+import Posts from './Posts/Posts';
+import { Route, NavLink } from 'react-router-dom';
+// import axios from 'axios'
 
-import Post from '../../components/Post/Post';
-import FullPost from '../../components/FullPost/FullPost';
-import NewPost from '../../components/NewPost/NewPost';
+// import Post from '../../components/Post/Post';
+import FullPost from './FullPost/FullPost';
+import NewPost from './NewPost/NewPost';
 import './Blog.css';
 
 class Blog extends Component {
-    state = {
-      posts: [],
-      selectedPostId: null
-    };
 
-    postSelected = (id) => {
-      console.log('id', id);
-      this.setState({selectedPostId: id});
-    };
-
-    componentDidMount () {
-      axios.get('/posts')
-        .then(response => {
-          const posts = response.data.slice(0, 10);
-          const updatedPosts = posts.map( post => {
-           let authorName = (post.id === 1) ? 'Max' : 'Manu';
-           return {
-             ...post,
-             author: authorName
-           }
-          });
-
-          this.setState({posts: updatedPosts});
-          console.log(response.data);
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    }
     render () {
-        const posts = this.state.posts.map( post => {
-          return <Post key={post.id}
-                       title={post.title}
-                       author={post.author}
-                       clicked={() => this.postSelected(post.id)}/>
-        });
+
         return (
             <div>
-                <section className="Posts">
-                  {posts}
-                </section>
-                <section>
-                    <FullPost id={this.state.selectedPostId} />
-                </section>
-                <section>
-                    <NewPost />
-                </section>
+              <header className="Blog">
+                <nav>
+                  <ul>
+                    <li><NavLink exact activeClassName="active" to="/" >Home</NavLink></li>
+                    <li><NavLink exact to={{
+                      pathname: '/new',
+                      // pathname: this.props.match.url + 'new', // relative location
+                      // hash: '#submit',
+                      // search: '?quick-submit=true'
+                    }} >New post</NavLink></li>
+                  </ul>
+                </nav>
+              </header>
+              <Route path="/" exact component={Posts} />
+              <Route path="/new" exact component={NewPost} />
+              <Route path="/:id" exact component={FullPost} />
+                {/*<section>*/}
+                    {/*<FullPost id={this.state.selectedPostId} />*/}
+                {/*</section>*/}
+                {/*<section>*/}
+                    {/*<NewPost />*/}
+                {/*</section>*/}
             </div>
         );
     }
